@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login">
+        <h1 class="login__title">Register</h1>
+        
+        <form class="login__form" id="register-form">
+            <div class="login__inputs">
+
+                <div class="login__box">
+                    <input type="text" id="reg-username" placeholder="Username" required class="login__input">
+                </div>
+
+                <div class="login__box">
+                    <input type="password" id="reg-password" placeholder="Password" required class="login__input">
+                </div>
+
+                <div class="login__box">
+                    <input type="password" id="reg-confirm-password" placeholder="Confirm Password" required class="login__input">
+                </div>
+
+            </div>
+
+            <button type="button" class="login__button" onclick="register()">Register</button>
+
+            <div class="login__register">
+                Already have an account? <a href="index.html">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+async function register() {
+    const username = document.getElementById("reg-username").value.trim();
+    const password = document.getElementById("reg-password").value.trim();
+    const confirmPassword = document.getElementById("reg-confirm-password").value.trim();
+
+    if (!username || !password || !confirmPassword) {
+        alert("Please fill out all fields.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/api/users/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: username,
+                email: username + "@test.com",
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (response.ok) {
+            window.location.href = "index.html";
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Server error. Make sure backend is running.");
+    }
+}
+</script>
+
+</body>
+</html>
